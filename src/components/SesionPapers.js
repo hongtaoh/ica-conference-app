@@ -1,27 +1,31 @@
-// components/AuthorPapers.js
+// components/SessionPapers.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchPapers } from '../services/API';
+import { fetchPapersViaSessionID } from '../services/API';
 import PaperList from './PaperList';
 
 const SessionPapers = () => {
   const { session_id} = useParams();
   const [papers, setPapers] = useState([]);
+  const [sessionName, setSessionName] = useState(''); 
 
   useEffect(() => {
     const loadPapers = async () => {
-      const data = await fetchPapers({ has_author: originalAuthorName });
+      const data = await fetchPapersViaSessionID(session_id);
       setPapers(data);
+      if (data.length > 0 && data[0].session_info) {
+        setSessionName(data[0].session_info.session); // Assuming `session_info.session` contains the name
+      }
     };
     loadPapers();
-  }, [ModifiedAuthorName]);  // Only dependent on ModifiedAuthorName
+  }, [session_id]);  
 
   return (
     <div className="app-container">
-      <h3>Papers by {ModifiedAuthorName.replace(/_/g, ' ')}</h3> {/* Display transformed name */}
+      <h3>Papers in {sessionName || session_id}</h3>
       <PaperList papers={papers} />
     </div>
   );
 };
 
-export default AuthorPapers;
+export default SessionPapers;

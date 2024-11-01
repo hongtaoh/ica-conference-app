@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000' 
 
 // Helper function for GET requests
 const getRequest = async (endpoint, params = {}) => {
@@ -18,6 +18,11 @@ const getRequest = async (endpoint, params = {}) => {
 export const fetchPapers = async (params = {}) => {
   const defaultParams = { page: 1, limit: 50 };
   return getRequest('/papers', { ...defaultParams, ...params });
+};
+
+export const fetchPapersViaSessionID = async (session_id, page = 1, limit = 50) => {
+  const params = { page, limit, "session_info.session_id": session_id };
+  return getRequest('/papers', params);
 };
 
 export const fetchSinglePaper = async (paper_id) => getRequest(`/papers/${paper_id}`);

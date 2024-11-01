@@ -9,6 +9,7 @@ import PaperDetail from './components/PaperDetail';
 import './App.css';
 import About from './components/About';
 import AllSessions from './components/AllSessions';
+import SessionPapers from './components/SesionPapers';
 
 const App = () => (
   <Router>
@@ -21,7 +22,7 @@ const App = () => (
         <Route path="/sessions" element={<AllSessions />} />
         <Route path="/paper/:id" element={<PaperDetail />} />
         <Route path="/papers/:ModifiedAuthorName" element={<AuthorPapers />} />
-        <Route path="/papers/:session_id" element={<SessionPapers />} />
+        <Route path="/sessions/:session_id" element={<SessionPapers />} />
       </Routes>
     </div>
   </Router>

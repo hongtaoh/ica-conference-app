@@ -53,7 +53,7 @@ const AllSessions = () => {
   };
 
   const handleSessionClick = (sessionId) => {
-    navigate(`/session/${sessionId}`);
+    navigate(`/sessions/${sessionId}`);
   };
 
   return (
