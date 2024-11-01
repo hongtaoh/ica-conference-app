@@ -6,6 +6,8 @@ const Header = () => (
   <header className="header">
     <div className="header-left">
       <Link to="/" className="header-link">Papers</Link>
+      <Link to="/authors" className="header-link">Authors</Link>
+      <Link to="/sessions" className="header-link">Sessions</Link>
       <Link to="/about" className="header-link">About</Link>
     </div>
     <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="github-icon">

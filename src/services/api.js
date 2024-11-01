@@ -1,30 +1,33 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://127.0.0.1:8000'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000';
 
-export const fetchPapers = async (page, limit = 50) => {
-    const response = await axios.get(`${API_BASE_URL}/papers`, { params: { page, limit } });
+// Helper function for GET requests
+const getRequest = async (endpoint, params = {}) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}${endpoint}`, { params });
     return response.data;
-  };
+  } catch (error) {
+    console.error(`Error fetching data from ${endpoint}:`, error);
+    throw error; // Optional: rethrow to handle in calling component
+  }
+};
 
-export const fetchSinglePaper = async (PaperID) => {
-    const response = await axios.get(`${API_BASE_URL}/papers/${PaperID}`)
-    return response.data;
-}
+// Specific API calls
+// services/API.js
+export const fetchPapers = async (params = {}) => {
+  const defaultParams = { page: 1, limit: 50 };
+  return getRequest('/papers', { ...defaultParams, ...params });
+};
 
-export const fetchSamplePapers = async (limit = 100) => {
-    const response = await axios.get(`${API_BASE_URL}/sample_papers`, {
-         params : {limit}
-    });
-    return response.data;
-}
+export const fetchSinglePaper = async (paper_id) => getRequest(`/papers/${paper_id}`);
 
-export const fetchAuthors = async (params) => {
-    const response = await axios.get(`${API_BASE_URL}/authors`, { params })
-    return response.data;
-}
+export const fetchSamplePapers = async (limit = 100) => getRequest('/sample_papers', { limit });
 
-export const fetchSessions = async (params) => {
-    const response = await axios.get(`${API_BASE_URL}/sessions`, { params })
-    return response.data;
-}
+export const fetchAuthors = async (page, limit = 50) => getRequest('/authors', { page, limit });
+
+export const fetchSampleAuthors = async (limit = 100) => getRequest('/sample_authors', { limit });
+
+export const fetchSessions = async (page, limit = 50) => getRequest('/sessions', { page, limit });
+
+export const fetchSampleSessions = async (limit = 100) => getRequest('/sample_sessions', { limit });

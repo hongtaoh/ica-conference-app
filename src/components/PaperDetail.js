@@ -1,7 +1,7 @@
 // components/PaperDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchSinglePaper } from '../services/api';
+import { fetchSinglePaper } from '../services/API';
 
 const PaperDetail = () => {
   const { id } = useParams();
@@ -19,12 +19,12 @@ const PaperDetail = () => {
 
   return (
     <div className="paper-detail-container">
-      <h2>{paper.Title}</h2>
-      <p><strong>Year:</strong> {paper.Year}</p>
-      <p><strong>Authors:</strong> {paper.Authors}</p>
-      <p><strong>Abstract:</strong> {paper.Abstract}</p>
-      <p><strong>Session:</strong> {paper.Session}</p>
-      <p><strong>Division/Unit:</strong> {paper['Division/Unit']}</p>
+      <h2>{paper.title}</h2>
+      <p><strong>Year:</strong> {paper.year}</p>
+      <p><strong>Authors:</strong> {paper.author_names.join(", ")}</p>
+      <p><strong>Abstract:</strong> {paper.abstract}</p>
+      <p><strong>Session:</strong> {paper.session}</p>
+      <p><strong>Division/Interest Group:</strong> {paper['division']}</p>
     </div>
   );
 };

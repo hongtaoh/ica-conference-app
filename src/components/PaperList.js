@@ -1,26 +1,22 @@
 // components/PaperList.js
-import React, { useEffect, useState } from 'react';
-import { fetchSamplePapers } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import FilterPanel from './FilterPanel';
+import { useNavigate } from 'react-router-dom';
 
-const PaperList = () => {
-  const [papers, setPapers] = useState([]);
+const PaperList = ({ papers }) => {
   const [filteredPapers, setFilteredPapers] = useState([]);
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadPapers = async () => {
-      const data = await fetchSamplePapers();
-      setPapers(data);
-      setFilteredPapers(data);
-      setYears([...new Set(data.map((paper) => paper.Year))]);
-    };
-    loadPapers();
-  }, []);
+    setFilteredPapers(papers);
+    setYears([...new Set(papers.map((paper) => paper.year))]);
+  }, [papers]);
+
+  const toggleFilterPanel = () => setIsFilterPanelOpen(!isFilterPanelOpen);
 
   const handleFilterChange = (year) => {
     setSelectedYear(year);
@@ -35,37 +31,49 @@ const PaperList = () => {
 
   const filterPapers = (term, year) => {
     const filtered = papers.filter((paper) =>
-      (year ? paper.Year === parseInt(year) : true) &&
-      (term
-        ? (
-            (paper.Title && paper.Title.toLowerCase().includes(term.toLowerCase())) ||
-            (paper.Authors && paper.Authors.toLowerCase().includes(term.toLowerCase())) ||
-            (paper.Abstract && paper.Abstract.toLowerCase().includes(term.toLowerCase()))
-          )
-        : true)
+      (!year || paper.year === parseInt(year)) &&
+      (!term ||
+        paper.title.toLowerCase().includes(term.toLowerCase()) ||
+        (paper.author_names && paper.author_names.some(author => author.toLowerCase().includes(term.toLowerCase()))) ||
+        (paper.abstract && paper.abstract.toLowerCase().includes(term.toLowerCase()))
+      )
     );
     setFilteredPapers(filtered);
   };
   
-
   return (
-    <div className="paper-list-container">
-      <input
-        className="search-bar"
-        type="text"
-        placeholder="Search (Title, Author, Abstract)"
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
-      <FilterPanel years={years} selectedYear={selectedYear} onFilterChange={handleFilterChange} />
-      <div className="paper-list">
-        {filteredPapers.map((paper) => (
-          <div key={paper['Paper ID']} className="paper-card" onClick={() => navigate(`/paper/${paper['Paper ID']}`)}>
-            <p className="paper-title">{paper.Title}</p>
-            <p className="paper-authors">{paper.Authors}</p>
-            <span className="paper-year">{paper.Year}</span>
-          </div>
-        ))}
+    <div className="app-container">
+      <div className="filter-and-search">
+        <button className="filter-button" onClick={toggleFilterPanel}>
+          <i className="fas fa-filter"></i>
+        </button>
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Search (Title, Author, Abstract)"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </div>
+      <div className="content-container">
+        {isFilterPanelOpen && (
+          <FilterPanel
+            isOpen={isFilterPanelOpen}
+            onClose={toggleFilterPanel}
+            years={years}
+            selectedYear={selectedYear}
+            onFilterChange={handleFilterChange}
+          />
+        )}
+        <div className="paper-list">
+            {filteredPapers.map((paper) => (
+            <div key={paper['paper_id']} className="paper-card" onClick={() => navigate(`/paper/${paper['paper_id']}`)}>
+                <p className="paper-title">{paper.title}</p>
+                <p className="paper-authors">{paper.author_names.join(", ")}</p>
+                <span className="paper-year">{paper.year}</span>
+            </div>
+            ))}
+        </div>
       </div>
     </div>
   );
