@@ -1,7 +1,7 @@
 // components/AuthorPapers.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchPapers } from '../services/API';
+import { fetchPapers } from '../API';
 import PaperList from './PaperList';
 
 const AuthorPapers = () => {

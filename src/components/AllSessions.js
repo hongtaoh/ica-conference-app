@@ -1,6 +1,6 @@
 // components/AllSessions.js
 import React, { useState, useEffect } from 'react';
-import { fetchSampleSessions } from '../services/API';
+import { fetchSampleSessions } from '../API';
 import FilterPanel from './FilterPanel';
 import { useNavigate } from 'react-router-dom';
 

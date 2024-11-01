@@ -1,7 +1,7 @@
 // components/PaperDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchSinglePaper } from '../services/API';
+import { fetchSinglePaper } from '../API';
 
 const PaperDetail = () => {
   const { id } = useParams();

@@ -1,7 +1,7 @@
 // components/SessionPapers.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchPapersViaSessionID } from '../services/API';
+import { fetchPapersViaSessionID } from '../API';
 import PaperList from './PaperList';
 
 const SessionPapers = () => {

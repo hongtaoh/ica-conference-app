@@ -1,6 +1,6 @@
 // components/AllPapers.js
 import React, { useState, useEffect } from 'react';
-import { fetchSamplePapers } from '../services/API';
+import { fetchSamplePapers } from '../API';
 import PaperList from './PaperList';
 
 const AllPapers = () => {  // Removed trailing space in component name

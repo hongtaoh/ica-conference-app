@@ -1,6 +1,6 @@
 // components/AllAuthors.js
 import React, { useState, useEffect } from 'react';
-import { fetchSampleAuthors } from '../services/API';
+import { fetchSampleAuthors } from '../API';
 import FilterPanel from './FilterPanel';
 import { useNavigate } from 'react-router-dom';
 
