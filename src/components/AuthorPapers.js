@@ -1,7 +1,7 @@
 // components/AuthorPapers.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchPapers } from '../API';
+import { fetchAuthorPapers } from '../API';
 import PaperList from './PaperList';
 
 const AuthorPapers = () => {
@@ -10,16 +10,16 @@ const AuthorPapers = () => {
 
   useEffect(() => {
     const loadPapers = async () => {
-      const originalAuthorName = ModifiedAuthorName.replace(/_/g, ' '); // Transform here
-      const data = await fetchPapers({ has_author: originalAuthorName });
+      const originalAuthorName = ModifiedAuthorName.replace(/_/g, ' '); 
+      const data = await fetchAuthorPapers(originalAuthorName);
       setPapers(data);
     };
     loadPapers();
-  }, [ModifiedAuthorName]);  // Only dependent on ModifiedAuthorName
+  }, [ModifiedAuthorName]); 
 
   return (
     <div className="app-container">
-      <h3>Papers by {ModifiedAuthorName.replace(/_/g, ' ')}</h3> {/* Display transformed name */}
+      <h3>Papers by {ModifiedAuthorName.replace(/_/g, ' ')}</h3> 
       <PaperList papers={papers} />
     </div>
   );

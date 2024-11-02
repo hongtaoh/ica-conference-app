@@ -21,6 +21,7 @@ const PaperDetail = () => {
     <div className="paper-detail-container">
       <h2>{paper.title}</h2>
       <p><strong>Year:</strong> {paper.year}</p>
+      <p><strong>Paper ID:</strong> {paper.paper_id}</p>
       <p><strong>Authors:</strong> {paper.author_names.join(", ")}</p>
       <p><strong>Abstract:</strong> {paper.abstract}</p>
       <p><strong>Session:</strong> {paper.session}</p>

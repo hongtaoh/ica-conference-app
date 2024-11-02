@@ -1,38 +1,63 @@
-import axios from 'axios';
+// Cache variables for each JSON file
+let cachedPapers = null;
+let cachedIndexedPapers = null;
+let cachedSessionPapers = null;
+let cachedAuthorPapers = null;
+let cachedAuthors = null;
+let cachedSessions = null;
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000' 
-
-// Helper function for GET requests
-const getRequest = async (endpoint, params = {}) => {
+const fetchLocalData = async (fileName) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}${endpoint}`, { params });
-    return response.data;
+    const response = await fetch(`/data/${fileName}.json`);
+    if (!response.ok) throw new Error(`Failed to fetch ${fileName}`);
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error(`Error fetching data from ${endpoint}:`, error);
-    throw error; // Optional: rethrow to handle in calling component
+    console.error(`Error loading ${fileName}:`, error);
+    return null;
   }
 };
 
-// Specific API calls
-// services/API.js
-export const fetchPapers = async (params = {}) => {
-  const defaultParams = { page: 1, limit: 50 };
-  return getRequest('/papers', { ...defaultParams, ...params });
+// Wrapper functions that use caching
+
+export const fetchPapers = async () => {
+  if (!cachedPapers) {
+    cachedPapers = await fetchLocalData('papers');
+  }
+  return cachedPapers;
 };
 
-export const fetchPapersViaSessionID = async (session_id, page = 1, limit = 50) => {
-  const params = { page, limit, "session_info.session_id": session_id };
-  return getRequest('/papers', params);
+export const fetchSinglePaper = async (paper_id) => {
+  if (!cachedIndexedPapers) {
+    cachedIndexedPapers = await fetchLocalData('indexed_papers');
+  }
+  return cachedIndexedPapers[paper_id] || null;
 };
 
-export const fetchSinglePaper = async (paper_id) => getRequest(`/papers/${paper_id}`);
+export const fetchSessionPapers = async (session_id) => {
+  if (!cachedSessionPapers) {
+    cachedSessionPapers = await fetchLocalData('sessionid_papers');
+  }
+  return cachedSessionPapers[session_id] || [];
+};
 
-export const fetchSamplePapers = async (limit = 100) => getRequest('/sample_papers', { limit });
+export const fetchAuthorPapers = async (authorName) => {
+  if (!cachedAuthorPapers) {
+    cachedAuthorPapers = await fetchLocalData('author_papers');
+  }
+  return cachedAuthorPapers[authorName] || [];
+};
 
-export const fetchAuthors = async (page, limit = 50) => getRequest('/authors', { page, limit });
+export const fetchAuthors = async () => {
+  if (!cachedAuthors) {
+    cachedAuthors = await fetchLocalData('authors');
+  }
+  return cachedAuthors;
+};
 
-export const fetchSampleAuthors = async (limit = 100) => getRequest('/sample_authors', { limit });
-
-export const fetchSessions = async (page, limit = 50) => getRequest('/sessions', { page, limit });
-
-export const fetchSampleSessions = async (limit = 100) => getRequest('/sample_sessions', { limit });
+export const fetchSessions = async () => {
+  if (!cachedSessions) {
+    cachedSessions = await fetchLocalData('sessions');
+  }
+  return cachedSessions;
+};

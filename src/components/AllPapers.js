@@ -1,15 +1,19 @@
 // components/AllPapers.js
 import React, { useState, useEffect } from 'react';
-import { fetchSamplePapers } from '../API';
+import { fetchPapers } from '../API';
 import PaperList from './PaperList';
 
-const AllPapers = () => {  // Removed trailing space in component name
+const AllPapers = () => {  
   const [papers, setPapers] = useState([]);
 
   useEffect(() => {
     const loadPapers = async () => {
-      const data = await fetchSamplePapers();
-      setPapers(data);
+      try {
+        const data = await fetchPapers();
+        setPapers(data);
+      } catch (error) {
+        console.error("Error loading papers:", error)
+      }
     };
     loadPapers();
   }, []);

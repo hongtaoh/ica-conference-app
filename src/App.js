@@ -2,14 +2,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import AllPapers from './components/AllPapers';  // Corrected import casing
-import AllAuthors from './components/AllAuthors';
-import AuthorPapers from './components/AuthorPapers';
+
+import AllPapers from './components/AllPapers';  
 import PaperDetail from './components/PaperDetail';
+
+import AllAuthors from './components/AllAuthors';
+import AllSessions from './components/AllSessions';
+
+import AuthorPapers from './components/AuthorPapers';
+import SessionPapers from './components/SessionPapers';
+
 import './App.css';
 import About from './components/About';
-import AllSessions from './components/AllSessions';
-import SessionPapers from './components/SesionPapers';
 
 const App = () => (
   <Router>

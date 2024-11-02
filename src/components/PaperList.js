@@ -1,22 +1,35 @@
 // components/PaperList.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import FilterPanel from './FilterPanel';
 import { useNavigate } from 'react-router-dom';
 
 const PaperList = ({ papers }) => {
-  const [filteredPapers, setFilteredPapers] = useState([]);
+  const [displayedPapers, setDisplayedPapers] = useState([]);
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [visibleCount, setVisibleCount] = useState(50);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setFilteredPapers(papers);
+    setDisplayedPapers(papers.slice(0, visibleCount))
     setYears([...new Set(papers.map((paper) => paper.year))]);
-  }, [papers]);
+  }, [papers, visibleCount]);
 
   const toggleFilterPanel = () => setIsFilterPanelOpen(!isFilterPanelOpen);
+
+  const filterPapers = (term, year) => {
+    const filtered = papers.filter((paper) =>
+      (!year || paper.year === parseInt(year)) &&
+      (!term ||
+        paper.title.toLowerCase().includes(term.toLowerCase()) ||
+        (paper.author_names && paper.author_names.some(author => author.toLowerCase().includes(term.toLowerCase()))) ||
+        (paper.abstract && paper.abstract.toLowerCase().includes(term.toLowerCase()))
+      )
+    );
+    setDisplayedPapers(filtered.slice(0, visibleCount))
+  };
 
   const handleFilterChange = (year) => {
     setSelectedYear(year);
@@ -29,17 +42,16 @@ const PaperList = ({ papers }) => {
     filterPapers(term, selectedYear);
   };
 
-  const filterPapers = (term, year) => {
-    const filtered = papers.filter((paper) =>
-      (!year || paper.year === parseInt(year)) &&
-      (!term ||
-        paper.title.toLowerCase().includes(term.toLowerCase()) ||
-        (paper.author_names && paper.author_names.some(author => author.toLowerCase().includes(term.toLowerCase()))) ||
-        (paper.abstract && paper.abstract.toLowerCase().includes(term.toLowerCase()))
-      )
-    );
-    setFilteredPapers(filtered);
-  };
+  const loadMorePapers = useCallback(() => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+      setVisibleCount((prevCount) => prevCount + 50)
+    }
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('scroll', loadMorePapers);
+    return () => window.removeEventListener('scroll', loadMorePapers);
+  }, [loadMorePapers])
   
   return (
     <div className="app-container">
@@ -66,7 +78,7 @@ const PaperList = ({ papers }) => {
           />
         )}
         <div className="paper-list">
-            {filteredPapers.map((paper) => (
+            {displayedPapers.map((paper) => (
             <div key={paper['paper_id']} className="paper-card" onClick={() => navigate(`/paper/${paper['paper_id']}`)}>
                 <p className="paper-title">{paper.title}</p>
                 <p className="paper-authors">{paper.author_names.join(", ")}</p>
