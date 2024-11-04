@@ -2,7 +2,7 @@
 let cachedPapers = null;
 let cachedIndexedPapers = null;
 let cachedSessionPapers = null;
-let cachedAuthorPapers = null;
+let cachedAuthorPaperIds = null;
 let cachedAuthors = null;
 let cachedSessions = null;
 
@@ -42,10 +42,20 @@ export const fetchSessionPapers = async (session_id) => {
 };
 
 export const fetchAuthorPapers = async (authorName) => {
-  if (!cachedAuthorPapers) {
-    cachedAuthorPapers = await fetchLocalData('author_papers');
+  if (!cachedAuthorPaperIds) {
+    cachedAuthorPaperIds = await fetchLocalData('author_paper_ids');
   }
-  return cachedAuthorPapers[authorName] || [];
+  if (!cachedIndexedPapers) {
+    cachedIndexedPapers = await fetchLocalData('indexed_papers');
+  }
+  const paperIds = cachedAuthorPaperIds[authorName]
+  if (!paperIds) {
+    return [];
+  }
+  const authorPapers = paperIds.map(
+    (paperId) => cachedIndexedPapers[paperId]).filter(Boolean);
+
+  return authorPapers;
 };
 
 export const fetchAuthors = async () => {
