@@ -21,6 +21,7 @@ const PaperList = ({ papers }) => {
 
   const filterPapers = (term, year) => {
     const filtered = papers.filter((paper) =>
+      paper &&
       (!year || paper.year === parseInt(year)) &&
       (!term ||
         paper.title.toLowerCase().includes(term.toLowerCase()) ||
@@ -79,11 +80,13 @@ const PaperList = ({ papers }) => {
         )}
         <div className="paper-list">
             {displayedPapers.map((paper) => (
-            <div key={paper['paper_id']} className="paper-card" onClick={() => navigate(`/paper/${paper['paper_id']}`)}>
+              paper ? (
+                <div key={paper['paper_id']} className="paper-card" onClick={() => navigate(`/paper/${paper['paper_id']}`)}>
                 <p className="paper-title">{paper.title}</p>
                 <p className="paper-authors">{paper.author_names.join(", ")}</p>
                 <span className="paper-year">{paper.year}</span>
-            </div>
+                </div>
+              ) : null
             ))}
         </div>
       </div>

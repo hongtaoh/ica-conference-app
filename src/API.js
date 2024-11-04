@@ -24,7 +24,7 @@ export const fetchPapers = async () => {
   if (!cachedPapers) {
     cachedPapers = await fetchLocalData('papers');
   }
-  return cachedPapers;
+  return cachedPapers ? cachedPapers.sort((a, b) => b.year - a.year) : [];
 };
 
 export const fetchSinglePaper = async (paper_id) => {

@@ -12,6 +12,8 @@ import AllSessions from './components/AllSessions';
 import AuthorPapers from './components/AuthorPapers';
 import SessionPapers from './components/SessionPapers';
 
+import Search from './components/Search';
+
 import './App.css';
 import About from './components/About';
 
@@ -27,6 +29,7 @@ const App = () => (
         <Route path="/paper/:id" element={<PaperDetail />} />
         <Route path="/papers/:ModifiedAuthorName" element={<AuthorPapers />} />
         <Route path="/sessions/:session_id" element={<SessionPapers />} />
+        <Route path="/search" element={<Search />} /> 
       </Routes>
     </div>
   </Router>

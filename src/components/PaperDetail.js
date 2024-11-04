@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { fetchSinglePaper } from '../API';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import { Typography, Box, Paper, Button, IconButton, CircularProgress, Tooltip, Container } from '@mui/material';
+import { ArrowBack, ContentCopy } from '@mui/icons-material';
 
 const PaperDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [paper, setPaper] = useState(null);
 
   useEffect(() => {
@@ -15,7 +17,7 @@ const PaperDetail = () => {
     loadPaper();
   }, [id]);
 
-  if (!paper) return <p>Loading...</p>;
+  if (!paper) return <CircularProgress />;
 
   // Calculate conference number based on the year
   const conferenceNumber = paper.year - 1950; // 75th in 2025, so 1950 as base
@@ -27,7 +29,7 @@ const PaperDetail = () => {
   const citation = `@article{ica-${paper.paper_id},
   title={${paper.title}},
   author={${formattedAuthors}},
-  journal={${conferenceNumber}th Annual Conference of the International Communication Association},
+  journal={${conferenceNumber}th Annual Conference of the International Communication Association (ICA)},
   year={${paper.year}},
   publisher={ICA}
 }`;
@@ -39,26 +41,76 @@ const PaperDetail = () => {
   };
 
   return (
-    <div className="paper-detail-container">
-      <h2>{paper.title}</h2>
-      <p><strong>Year:</strong> {paper.year}</p>
-      <p><strong>Paper ID:</strong> {paper.paper_id}</p>
-      <p><strong>Authors:</strong> {paper.author_names.join(", ")}</p>
-      <p><strong>Abstract:</strong> {paper.abstract}</p>
-      <p><strong>Session:</strong> {paper.session || "N/A"}</p>
-      <p><strong>Division/Interest Group:</strong> {paper.division || "N/A"}</p>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      {/* Back Button */}
+      <Button 
+        startIcon={<ArrowBack />} 
+        onClick={() => navigate(-1)} 
+        variant="outlined" 
+        color="primary"
+        sx={{ mb: 3 }}
+      >
+        Back
+      </Button>
 
-      {/* Citation section */}
-      <div className="citation-container">
-        <h3>Citation</h3>
-        <pre className="citation-box">
-          {citation}
-          <button className="copy-icon-button" onClick={handleCopyCitation} title="Copy Citation">
-            <i className="fas fa-copy"></i>
-          </button>
-        </pre>
-      </div>
-    </div>
+      {/* Paper Details */}
+      <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          {paper.title}
+        </Typography>
+        
+        {/* Year, Division, Session */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 2, mb: 1 }}>
+            <strong>Authors:</strong> {paper.author_names.join(", ")}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" display="block">
+            <strong>Year:</strong> {paper.year}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" display="block">
+            <strong>Division:</strong> {paper.division || "N/A"}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" display="block">
+            <strong>Session:</strong> {paper.session || "N/A"}
+          </Typography>
+        </Box>
+
+        <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.75 }}>
+          {paper.abstract}
+        </Typography>
+        
+      </Paper>
+
+      {/* Citation Section */}
+      <Box mt={4}>
+        <Typography variant="h5" gutterBottom>
+          Citation
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+          <Box
+            component="pre"
+            sx={{
+              backgroundColor: '#f5f5f5',
+              padding: 2,
+              borderRadius: 1,
+              width: '100%',
+              maxWidth: 800,
+              overflow: 'auto',
+              textAlign: 'left',
+              whiteSpace: 'pre-wrap',
+              fontFamily: 'monospace',
+            }}
+          >
+            {citation}
+          </Box>
+          <Tooltip title="Copy Citation">
+            <IconButton onClick={handleCopyCitation} sx={{ ml: 1 }}>
+              <ContentCopy />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 
