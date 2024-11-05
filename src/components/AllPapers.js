@@ -20,7 +20,7 @@ const AllPapers = () => {
   }, []);
 
   return (
-    <Container maxWidth="xl" sx={{ mt: { xs: 6, md: 14 }, px: { xs: 2, sm: 4, md: 0 } }}>
+    <Container maxWidth="xl" sx={{ mt: { xs: 6, md: 14 }, px: { xs: 2, sm: 2, md: 0 } }}>
       <PaperList papers={papers} />
     </Container>
   );
