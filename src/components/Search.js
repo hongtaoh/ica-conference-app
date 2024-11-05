@@ -17,10 +17,11 @@ const Search = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const localAPI = 'http://localhost:8000/search';
+  const productionAPI = 'https://icaconfsearchapi.onrender.com/search';
 
   const fetchSearchResults = useCallback(async (initialQuery, initialTopPapers) => {
-    const cacheKey = `${initialQuery}_${initialTopPapers}`;
+    const cacheKey = `${initialQuery}_${initialTopPapers};`
     
     // Check if the result is already in the cache
     if (cache[cacheKey]) {
@@ -33,20 +34,29 @@ const Search = () => {
     setError(null);
 
     try {
-      const response = await axios.get(`${API_BASE_URL}/search`, {
+      const response = await axios.get(localAPI, {
         params: { query: initialQuery, k: initialTopPapers },
       });
       setResults(response.data);
       cache[cacheKey] = response.data; // Cache the result
       setSearchParams({ query: initialQuery, topPapers: initialTopPapers });
-    } catch (error) {
-      setError('An error occurred during search');
-      console.error(error);
+    } catch (err) {
+      try {
+        const response = await axios.get(productionAPI, {
+          params: { query: initialQuery, k: initialTopPapers },
+        });
+        setResults(response.data);
+        cache[cacheKey] = response.data; // Cache the result
+        setSearchParams({ query: initialQuery, topPapers: initialTopPapers });
+      } catch (error) {
+        setError('An error occurred during search');
+        console.error(error);
+      }
     } finally {
       setLoading(false);
       setEmbeddingsLoading(false);
     }
-  }, [API_BASE_URL, setSearchParams]);
+  }, [localAPI, productionAPI, setSearchParams]);
 
   useEffect(() => {
     const initialQuery = searchParams.get('query') || '';
