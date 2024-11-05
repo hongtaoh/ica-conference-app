@@ -72,7 +72,7 @@ const SessionList = ({ sessions }) => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Container>
       <Typography variant="h4" component="h2" gutterBottom>
         Search Sessions
       </Typography>
@@ -110,7 +110,7 @@ const SessionList = ({ sessions }) => {
         </Grid>
       </Grid>
 
-      <div className="session-list">
+      <div>
         {displayedSessions.map((session) => (
           <Box key={session.session_id} sx={{ cursor: 'pointer', mb: 2 }} onClick={() => handleSessionClick(session.session_id)}>
             <Typography variant="h6" className="session-title">

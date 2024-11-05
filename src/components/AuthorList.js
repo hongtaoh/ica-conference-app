@@ -72,7 +72,7 @@ const AuthorList = ({ authors }) => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Container>
       <Typography variant="h4" component="h2" gutterBottom>
         Search Authors
       </Typography>
@@ -110,7 +110,7 @@ const AuthorList = ({ authors }) => {
         </Grid>
       </Grid>
 
-      <div className="author-list">
+      <div>
         {displayedAuthors.map((author) => (
           <Box key={author.author_name} sx={{ cursor: 'pointer', mb: 2 }} onClick={() => handleAuthorClick(author.author_name)}>
             <Typography variant="h6" className="author-name">

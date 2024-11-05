@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchSessions } from '../API';
 import SessionList from './SessionList';
+import { Container } from '@mui/material';
 
 const AllSessions = () => {  
   const [sessions, setSessions] = useState([]);
@@ -19,9 +20,9 @@ const AllSessions = () => {
   }, []);
 
   return (
-    <div className="app-container">
+    <Container maxWidth="md" sx={{ mt: { xs: 6, md: 14 }, px: { xs: 2, sm: 4, md: 0 } }}>
       <SessionList sessions={sessions} />
-    </div>
+    </Container>
   );
 };
 

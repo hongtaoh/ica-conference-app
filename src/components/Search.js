@@ -88,7 +88,7 @@ const Search = () => {
   const decreaseTopPapers = () => setTopPapers((prev) => Math.max(1, prev - 1));
 
   return (
-    <Container maxWidth="md" sx={{ mt: 14 }}>
+    <Container maxWidth="md" sx={{ mt: { xs: 6, md: 14 }, px: { xs: 2, sm: 4, md: 0 } }}>
       <Typography variant="h4" component="h2" gutterBottom>
         Search Relevant Papers (Beta)
       </Typography>

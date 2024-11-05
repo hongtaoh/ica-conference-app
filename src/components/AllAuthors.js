@@ -22,7 +22,7 @@ const AllAuthors = () => {
   }, []);
 
   return (
-    <Container maxWidth="md" sx={{ mt: 14 }}>
+    <Container maxWidth="md" sx={{ mt: { xs: 6, md: 14 }, px: { xs: 2, sm: 4, md: 0 } }}>
       <AuthorList authors={authors} />
     </Container>
   );

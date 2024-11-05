@@ -69,7 +69,7 @@ const PaperList = ({ papers, authorName, sessionName }) => {
   }, [loadMorePapers]);
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 14 }}>
+    <Container>
       {papers && authorName && (
         <Typography variant="h4" component="h3" gutterBottom>
           Search Papers by {authorName}
