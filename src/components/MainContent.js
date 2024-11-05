@@ -9,7 +9,7 @@ const MainContent = ({ children }) => (
       px: { xs: 2, sm: 4, md: 0 } 
     }}
   >
-    <Box sx={{ mt: { xs: 9, sm: 10 }, width: '100%', mx: 'auto', px: { xs: 2, sm: 4 } }}>
+    <Box sx={{ mt: { xs: 9, sm: 10 }, width: '99%', mx: 'auto', px: { xs: 2, sm: 4 } }}>
       {children}
     </Box>
   </Container>
