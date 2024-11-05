@@ -27,8 +27,8 @@ const App = () => (
         <Route path="/authors" element={<AllAuthors />} />
         <Route path="/sessions" element={<AllSessions />} />
         <Route path="/paper/:id" element={<PaperDetail />} />
-        <Route path="/papers/:ModifiedAuthorName" element={<AuthorPapers />} />
-        <Route path="/sessions/:session_id" element={<SessionPapers />} />
+        <Route path="/authorPapers/:ModifiedAuthorName" element={<AuthorPapers />} />
+        <Route path="/sessionPapers/:session_id" element={<SessionPapers />} />
         <Route path="/search" element={<Search />} /> 
       </Routes>
     </MainContent>

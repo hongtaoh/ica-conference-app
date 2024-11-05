@@ -68,7 +68,7 @@ const AuthorList = ({ authors }) => {
 
   const handleAuthorClick = (authorName) => {
     const formattedAuthorName = authorName.replace(/\s+/g, '_');
-    navigate(`/papers/${encodeURIComponent(formattedAuthorName)}`);
+    navigate(`/authorPapers/${encodeURIComponent(formattedAuthorName)}`);
   };
 
   return (

@@ -68,7 +68,7 @@ const SessionList = ({ sessions }) => {
   }, [loadMoreSessions]);
 
   const handleSessionClick = (sessionId) => {
-    navigate(`/sessions/${sessionId}`);
+    navigate(`/sessionPapers/${sessionId}`);
   };
 
   return (

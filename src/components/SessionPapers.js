@@ -20,6 +20,8 @@ const SessionPapers = () => {
     loadPapers();
   }, [session_id]);  
 
+  console.log(session_id)
+
   return (
     <Container maxWidth="xl" sx={{ mt: 14 }}>
       <PaperList papers={papers} sessionName={sessionName}/>
