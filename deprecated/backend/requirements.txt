@@ -1,4 +1,0 @@
-fastapi[standard]
-sentence_transformers
-numpy 
-faiss-cpu
