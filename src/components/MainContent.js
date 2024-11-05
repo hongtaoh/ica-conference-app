@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Container } from '@mui/material';
-import Header from './Header';
 
 const MainContent = ({ children }) => (
   <Container 
@@ -10,9 +9,6 @@ const MainContent = ({ children }) => (
       px: { xs: 2, sm: 4, md: 0 } 
     }}
   >
-    <Box sx={{ px: { xs: 2, sm: 4 }, width: '100%' }}>
-      <Header />
-    </Box>
     <Box sx={{ mt: { xs: 9, sm: 10 }, width: '100%', mx: 'auto', px: { xs: 2, sm: 4 } }}>
       {children}
     </Box>

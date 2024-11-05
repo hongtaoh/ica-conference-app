@@ -12,13 +12,24 @@ const Header = () => {
   };
 
   const drawerContent = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
+    <Box sx={{ width: 250 }} role="presentation">
       <List>
-        {['Papers', 'Authors', 'Sessions', 'Search', 'About'].map((text) => (
-          <ListItem button component={RouterLink} to={`/${text.toLowerCase()}`} key={text}>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        {/* close drawer once it is clicked */}
+        <ListItem button component={RouterLink} to="/" onClick={toggleDrawer(false)}>
+          <ListItemText primary="Papers" />
+        </ListItem>
+        <ListItem button component={RouterLink} to="/authors" onClick={toggleDrawer(false)}>
+          <ListItemText primary="Authors" />
+        </ListItem>
+        <ListItem button component={RouterLink} to="/sessions" onClick={toggleDrawer(false)}>
+          <ListItemText primary="Sessions" />
+        </ListItem>
+        <ListItem button component={RouterLink} to="/search" onClick={toggleDrawer(false)}>
+          <ListItemText primary="Search" />
+        </ListItem>
+        <ListItem button component={RouterLink} to="/about" onClick={toggleDrawer(false)}>
+          <ListItemText primary="About" />
+        </ListItem>
       </List>
     </Box>
   );
