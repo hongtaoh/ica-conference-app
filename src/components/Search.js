@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { TextField, Button, CircularProgress, Card, CardContent, Typography, Container, Box, Alert, IconButton } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
+
+// Cache for storing API results based on query and topPapers
+const cache = {};
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -14,46 +17,63 @@ const Search = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const localAPI = 'http://localhost:8000/search';
+  const productionAPI = 'https://icaconfsearchapi.onrender.com/search';
+
+  const fetchSearchResults = useCallback(async (initialQuery, initialTopPapers) => {
+    const cacheKey = `${initialQuery}_${initialTopPapers}`;
+    
+    // Check if the result is already in the cache
+    if (cache[cacheKey]) {
+      setResults(cache[cacheKey]);
+      return;
+    }
+
+    setLoading(true);
+    setEmbeddingsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.get(localAPI, {
+        params: { query: initialQuery, k: initialTopPapers },
+      });
+      setResults(response.data);
+      cache[cacheKey] = response.data; // Cache the result
+      setSearchParams({ query: initialQuery, topPapers: initialTopPapers });
+    } catch (err) {
+      try {
+        const response = await axios.get(productionAPI, {
+          params: { query: initialQuery, k: initialTopPapers },
+        });
+        setResults(response.data);
+        cache[cacheKey] = response.data; // Cache the result
+        setSearchParams({ query: initialQuery, topPapers: initialTopPapers });
+      } catch (error) {
+        setError('An error occurred during search');
+        console.error(error);
+      }
+    } finally {
+      setLoading(false);
+      setEmbeddingsLoading(false);
+    }
+  }, [localAPI, productionAPI, setSearchParams]);
+
   useEffect(() => {
-    // Extract parameters once
     const initialQuery = searchParams.get('query') || '';
     const initialTopPapers = parseInt(searchParams.get('topPapers'), 10) || 5;
 
     setQuery(initialQuery);
     setTopPapers(initialTopPapers);
 
-    // Define and immediately invoke an async function to handle search
-    const fetchSearchResults = async () => {
-      if (initialQuery) {
-        setLoading(true);
-        setEmbeddingsLoading(true);
-        setError(null);
-
-        try {
-          // Call the API to get search results
-          const response = await axios.get(`http://localhost:8000/search`, {
-            params: { query: initialQuery, k: initialTopPapers }
-          });
-          setResults(response.data);
-          // Update search parameters in the URL
-          setSearchParams({ query: initialQuery, topPapers: initialTopPapers });
-        } catch (err) {
-          setError('An error occurred during search');
-          console.error(err);
-        } finally {
-          setLoading(false);
-          setEmbeddingsLoading(false);
-        }
-      }
-    };
-
-    fetchSearchResults();
-  }, [searchParams, setSearchParams]); // Only include `searchParams` here, not `handleSearch`
+    if (initialQuery) {
+      fetchSearchResults(initialQuery, initialTopPapers);
+    }
+  }, [searchParams, fetchSearchResults]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Trigger search with current query and topPapers
     setSearchParams({ query, topPapers });
+    fetchSearchResults(query, topPapers);
   };
 
   const handleReset = () => {
@@ -68,15 +88,15 @@ const Search = () => {
   const decreaseTopPapers = () => setTopPapers((prev) => Math.max(1, prev - 1));
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <Container maxWidth="md" sx={{ mt: 14 }}>
       <Typography variant="h4" component="h2" gutterBottom>
-        Search Relevant Papers
+        Search Relevant Papers (Beta)
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: 2, mb: 2 }}>
         <TextField
           fullWidth
           variant="outlined"
-          label="Enter your query"
+          label="Enter your query here; it can be a key word, a sentence, or even a paragraph :)"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="search-bar"
@@ -102,7 +122,7 @@ const Search = () => {
       {loading && <CircularProgress />}
       {embeddingsLoading && (
         <Alert severity="info" sx={{ my: 2 }}>
-          Embeddings loading now, please wait until it is done. This might take a minute or two.
+          Embeddings loading now, please wait until it is done. This might take a minute when this is your first search as the API spins down with inactivity.
         </Alert>
       )}
       {error && <Alert severity="error" sx={{ my: 2 }}>{error}</Alert>}

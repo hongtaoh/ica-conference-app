@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPapers } from '../API';
 import PaperList from './PaperList';
+import { Container } from '@mui/material';
 
 const AllPapers = () => {  
   const [papers, setPapers] = useState([]);
@@ -19,9 +20,9 @@ const AllPapers = () => {
   }, []);
 
   return (
-    <div className="app-container">
+    <Container maxWidth="xl" sx={{ mt: 14 }}>
       <PaperList papers={papers} />
-    </div>
+    </Container>
   );
 };
 

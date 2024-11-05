@@ -1,7 +1,6 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/Header';
 
 import AllPapers from './components/AllPapers';  
 import PaperDetail from './components/PaperDetail';
@@ -17,10 +16,11 @@ import Search from './components/Search';
 import './App.css';
 import About from './components/About';
 
+import MainContent from './components/MainContent';
+
 const App = () => (
   <Router>
-    <div className="app-container">
-      <Header />
+    <MainContent>
       <Routes>
         <Route path="/about" element={<About />}/>
         <Route path="/" element={<AllPapers />} />
@@ -31,7 +31,7 @@ const App = () => (
         <Route path="/sessions/:session_id" element={<SessionPapers />} />
         <Route path="/search" element={<Search />} /> 
       </Routes>
-    </div>
+    </MainContent>
   </Router>
 );
 

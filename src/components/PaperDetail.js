@@ -59,11 +59,20 @@ const PaperDetail = () => {
           {paper.title}
         </Typography>
         
-        {/* Year, Division, Session */}
+        {/* Authors with Affiliations */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 2, mb: 1 }}>
-            <strong>Authors:</strong> {paper.author_names.join(", ")}
+            <strong>Authors:</strong>
           </Typography>
+          {paper.authorships.map((author) => (
+            <Typography key={author.position} variant="body1" color="text.secondary" display="block">
+              {author.author_name} ({author.author_affiliation})
+            </Typography>
+          ))}
+        </Box>
+
+        {/* Year, Division, Session */}
+        <Box sx={{ mb: 2 }}>
           <Typography variant="body1" color="text.secondary" display="block">
             <strong>Year:</strong> {paper.year}
           </Typography>

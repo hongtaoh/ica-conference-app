@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAuthors } from '../API';
 import AuthorList from './AuthorList';
+import { Container } from '@mui/material';
+
 
 const AllAuthors = () => {  
   const [authors, setAuthors] = useState([]);
@@ -20,9 +22,9 @@ const AllAuthors = () => {
   }, []);
 
   return (
-    <div className="app-container">
+    <Container maxWidth="md" sx={{ mt: 14 }}>
       <AuthorList authors={authors} />
-    </div>
+    </Container>
   );
 };
 

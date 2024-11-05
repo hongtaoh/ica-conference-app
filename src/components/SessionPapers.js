@@ -1,11 +1,11 @@
-// components/SessionPapers.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Container } from '@mui/material';
 import { fetchSessionPapers } from '../API';
 import PaperList from './PaperList';
 
 const SessionPapers = () => {
-  const { session_id} = useParams();
+  const { session_id } = useParams();
   const [papers, setPapers] = useState([]);
   const [sessionName, setSessionName] = useState(''); 
 
@@ -21,10 +21,9 @@ const SessionPapers = () => {
   }, [session_id]);  
 
   return (
-    <div className="app-container">
-      <h3>Papers in {sessionName || session_id}</h3>
-      <PaperList papers={papers} />
-    </div>
+    <Container maxWidth="xl" sx={{ mt: 14 }}>
+      <PaperList papers={papers} sessionName={sessionName}/>
+    </Container>
   );
 };
 
