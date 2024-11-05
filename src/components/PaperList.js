@@ -1,9 +1,9 @@
-// components/PaperList.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { TextField, MenuItem, Grid, Button, Container, Typography } from '@mui/material';
 
 const PaperList = ({ papers, authorName, sessionName }) => {
+  const [filteredPapers, setFilteredPapers] = useState([]);
   const [displayedPapers, setDisplayedPapers] = useState([]);
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
@@ -21,10 +21,14 @@ const PaperList = ({ papers, authorName, sessionName }) => {
         (paper.abstract && paper.abstract.toLowerCase().includes(term.toLowerCase()))
       )
     );
+    setFilteredPapers(filtered); 
     setDisplayedPapers(filtered.slice(0, visibleCount));
     setSearchParams({ search_term: term, filtered_year: year });
-  }, [papers, visibleCount, setSearchParams]);
 
+    const uniqueYears = [...new Set(filtered.map((paper) => paper.year))];
+    setYears(uniqueYears);
+
+  }, [papers, visibleCount, setSearchParams]);
 
   useEffect(() => {
     const initialTerm = searchParams.get('search_term') || '';
@@ -34,9 +38,8 @@ const PaperList = ({ papers, authorName, sessionName }) => {
     setSelectedYear(initialYear);
     
     filterPapers(initialTerm, initialYear);
-
-    setYears([...new Set(papers.map((paper) => paper.year))]);
-  }, [papers, searchParams, visibleCount, filterPapers]);
+    
+  }, [papers, searchParams, filterPapers]);
 
   const handleFilterChange = (event) => {
     const year = event.target.value;
@@ -53,8 +56,10 @@ const PaperList = ({ papers, authorName, sessionName }) => {
   const handleReset = () => {
     setSearchTerm('');
     setSelectedYear('');
+    setFilteredPapers(papers); 
     setDisplayedPapers(papers.slice(0, visibleCount));
-    setSearchParams({});;
+    setYears([...new Set(papers.map((paper) => paper.year))]);
+    setSearchParams({});
   };
 
   const loadMorePapers = useCallback(() => {
@@ -85,53 +90,59 @@ const PaperList = ({ papers, authorName, sessionName }) => {
           Search Papers
         </Typography>
       )}
-    <div style={{ padding: '20px' }}>
-      <Grid container spacing={2} alignItems="center" style={{ marginBottom: '20px' }}>
-        <Grid item xs={8}>
-          <TextField
-            fullWidth
-            label="Search (Title, Author, Abstract)"
-            variant="outlined"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <TextField
-            fullWidth
-            select
-            label="Filter by Year"
-            value={selectedYear}
-            onChange={handleFilterChange}
-            variant="outlined"
-          >
-            <MenuItem value="">All Years</MenuItem>
-            {years.map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={2}>
-          <Button fullWidth variant="outlined" onClick={handleReset}>
-            Reset
-          </Button>
-        </Grid>
-      </Grid>
 
-      <div className="paper-list">
-        {displayedPapers.map((paper) => (
-          paper ? (
-            <div key={paper['paper_id']} className="paper-card" onClick={() => navigate(`/paper/${paper['paper_id']}`)}>
-              <p className="paper-title">{paper.title}</p>
-              <p className="paper-authors">{paper.author_names.join(", ")}</p>
-              <span className="paper-year">{paper.year}</span>
-            </div>
-          ) : null
-        ))}
+      {/* Display the total number of filtered papers and selected years */}
+      <Typography variant="subtitle1" gutterBottom>
+        {filteredPapers.length} papers in {selectedYear ? `1 year (${selectedYear})` : `${years.length} year(s)`}
+      </Typography>
+
+      <div style={{ padding: '20px' }}>
+        <Grid container spacing={2} alignItems="center" style={{ marginBottom: '20px' }}>
+          <Grid item xs={8}>
+            <TextField
+              fullWidth
+              label="Search (Title, Author, Abstract)"
+              variant="outlined"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <TextField
+              fullWidth
+              select
+              label="Filter by Year"
+              value={selectedYear}
+              onChange={handleFilterChange}
+              variant="outlined"
+            >
+              <MenuItem value="">All Years</MenuItem>
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={2}>
+            <Button fullWidth variant="outlined" onClick={handleReset}>
+              Reset
+            </Button>
+          </Grid>
+        </Grid>
+
+        <div className="paper-list">
+          {displayedPapers.map((paper) => (
+            paper ? (
+              <div key={paper['paper_id']} className="paper-card" onClick={() => navigate(`/paper/${paper['paper_id']}`)}>
+                <p className="paper-title">{paper.title}</p>
+                <p className="paper-authors">{paper.author_names.join(", ")}</p>
+                <span className="paper-year">{paper.year}</span>
+              </div>
+            ) : null
+          ))}
+        </div>
       </div>
-    </div>
     </Container>
   );
 };

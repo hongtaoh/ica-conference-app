@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Container, TextField, MenuItem, Grid, Button, Typography, Box } from '@mui/material';
 
 const AuthorList = ({ authors }) => {
+  const [filteredAuthors, setFilteredAuthors] = useState([]);
   const [displayedAuthors, setDisplayedAuthors] = useState([]);
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
@@ -19,6 +20,7 @@ const AuthorList = ({ authors }) => {
         (author.affiliations && author.affiliations.some(aff => aff.toLowerCase().includes(term.toLowerCase())))
       )
     );
+    setFilteredAuthors(filtered)
     setDisplayedAuthors(filtered.slice(0, visibleCount));
     setSearchParams({ search_term: term, filtered_year: year });
   }, [authors, visibleCount, setSearchParams]);
@@ -51,6 +53,7 @@ const AuthorList = ({ authors }) => {
   const handleReset = () => {
     setSearchTerm('');
     setSelectedYear('');
+    setFilteredAuthors(authors); 
     setDisplayedAuthors(authors.slice(0, visibleCount));
     setSearchParams({});
   };
@@ -75,6 +78,9 @@ const AuthorList = ({ authors }) => {
     <Container>
       <Typography variant="h4" component="h2" gutterBottom>
         Search Authors
+      </Typography>
+      <Typography variant="subtitle1" gutterBottom>
+        {filteredAuthors.length} authors
       </Typography>
       <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
         <Grid item xs={8}>
