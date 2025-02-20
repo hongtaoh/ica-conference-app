@@ -67,7 +67,7 @@ const Header = () => {
         </Box>
 
         {/* GitHub icon, always displayed */}
-        <IconButton color="inherit" component="a" href="https://github.com" target="_blank" rel="noopener noreferrer">
+        <IconButton color="inherit" component="a" href="https://github.com/hongtaoh/ica-conference-app" target="_blank" rel="noopener noreferrer">
           <GitHubIcon />
         </IconButton>
       </Toolbar>

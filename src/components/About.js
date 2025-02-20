@@ -16,7 +16,7 @@ const About = () => (
         <Link href="https://www.icahdq.org/page/annual-conference" target="_blank" rel="noopener">
           official website of ICA
         </Link>
-        . The source code to scrape and wrangle the data will be available after ICA 2025 peer-review is done. Full datasets and codes to build the API and this web app will also be released then.
+        . 
       </Typography>
     </Box>
   </Container>
